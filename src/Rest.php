@@ -22,6 +22,21 @@ class Rest
      */
     private static $_client;
 
+    /**
+     * Dynamic call static function and pass paramater values.
+     * 
+     * Rest::news => Rest::_list('news')
+     * Rest::newsList => Rest::_list('news')
+     * Rest::newsAll => Rest::_all('news')
+     * Rest::friendlyLinksAll => Rest::_all('firendly-links')
+     * Rest::friendlyLinksList => Rest::_list('firendly-links')
+     * Rest::friendlyLinksOne => Rest::_one('firendly-links')
+     * 
+     * @param type $name
+     * @param type $arguments
+     * @return mixed
+     * @throws \Exception
+     */
     public static function __callStatic($name, $arguments)
     {
         $names = explode('_', strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $name)));
