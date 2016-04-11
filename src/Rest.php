@@ -18,6 +18,13 @@ class Rest
 {
 
     /**
+     * Format type
+     */
+    const FORMAT_ALL = 'all';
+    const FORMAT_LIST = 'list';
+    const FORMAT_ONE = 'one';
+
+    /**
      * @var Client
      */
     private static $_client;
@@ -45,7 +52,7 @@ class Rest
             throw new \Exception('get' . ucfirst($functionName) . ' function is undefined.');
         }
 
-        return static::$functionName($names[0], $arguments[0]);
+        return static::$functionName($names[0], isset($arguments[0]) ? $arguments[0] : []);
     }
 
     protected static function getInstance()
@@ -93,37 +100,69 @@ class Rest
         return $uri . '?' . implode('&', $res);
     }
 
+    /**
+     * Parse api repsonse body
+     * @param Client $response
+     * @param string $format
+     * @return array|boolean
+     */
+    private static function _parseResponse($response, $format = static::FORMAT_LIST)
+    {
+        switch ($response->getStatusCode()) {
+            case 200:
+                $body = json_decode($response->getBody(), true);
+                return $format == static::FORMAT_LIST ? $body['data']['items'] : $body['data'];
+
+            case 400:
+            case 500:
+                return false;
+
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Get all data with pagination meta, if fail will return false.
+     * @param integer $uri
+     * @param array $params
+     * @return array|boolean
+     */
     private static function _all($uri, $params = [])
     {
         $response = static::getInstance()->request('GET', static::_parseParams($uri, $params));
-        switch ($response->getStatusCode()) {
-            case 400:
-            case 500:
-                return [];
-
-            default:
-                return json_decode($response->getBody(), true);
-        }
+        return self::_parseResponse($response, self::FORMAT_ALL);
     }
 
+    /**
+     * Get data list, if fail will return false.
+     * @param integer $uri
+     * @param array $params
+     * @return array|boolean
+     */
     private static function _list($uri, $params)
     {
         $response = static::getInstance()->request('GET', static::_parseParams($uri . '/list', $params));
-        switch ($response->getStatusCode()) {
-            case 400:
-            case 500:
-                return [];
-
-            default:
-                return json_decode($response->getBody(), true);
-        }
+        return self::_parseResponse($response, self::FORMAT_LIST);
     }
 
-    private static function _one()
+    /**
+     * Get One data, if fail will return false.
+     * @param integer $uri
+     * @param array $params
+     * @return array|boolean
+     */
+    private static function _one($uri, $params)
     {
-        
+        $response = static::getInstance()->request('GET', static::_parseParams($uri, $params));
+        return self::_parseResponse($response, self::FORMAT_ONE);
     }
 
+    /**
+     * Batch execute requests
+     * @param array $requests
+     * @return array
+     */
     public static function batch($requests = [])
     {
         $batchResults = [];
