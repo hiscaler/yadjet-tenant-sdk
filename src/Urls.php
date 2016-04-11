@@ -1,12 +1,14 @@
 <?php
 
+namespace yadjet\tenant\sdk;
+
 /**
  * API URLs
  * @author hiscaler<hiscaler@gmail.com>
  * 
  * 注意：accessToken=DAC8838C-D7CB-98AC-2C76-D106EFB52E7A 只是一个示例，实际环境请替换
  */
-class RestUrls
+class Urls
 {
 
     const SEGMENT_AD = 'ads';
