@@ -53,10 +53,11 @@ class Rest
     public static function __callStatic($name, $arguments)
     {
         $names = explode('_', strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $name)));
-        $functionName = '_' . (isset($names[1]) ? end($names) : 'list');
-        if (!in_array($functionName, ['_all', '_list', '_one'])) {
+        $functionName = isset($names[1]) ? end($names) : 'list';
+        if (!in_array($functionName, ['all', 'list', 'one'])) {
             throw new \Exception('get' . ucfirst($functionName) . ' function is undefined.');
         }
+        $functionName = "_$functionName";
 
         return static::$functionName($names[0], isset($arguments[0]) ? $arguments[0] : []);
     }
