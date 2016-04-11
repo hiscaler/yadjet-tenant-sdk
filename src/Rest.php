@@ -42,7 +42,7 @@ class Rest
         $names = explode('_', strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $name)));
         $functionName = '_' . (isset($names[1]) ? end($names) : 'list');
         if (!in_array($functionName, ['_all', '_list', '_one'])) {
-            throw new \Exception("$functionName is not exists.");
+            throw new \Exception('get' . ucfirst($functionName) . ' function is undefined.');
         }
 
         return static::$functionName($names[0], $arguments[0]);
