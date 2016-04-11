@@ -59,16 +59,29 @@ class Rest
                     )
                 ), 'cache'
             );
-            static::$_client = new Client(['handler' => $stack, 'base_uri' => 'http://api.apdnews.com']);
+            static::$_client = new Client(['handler' => $stack, 'base_uri' => self::_getRestConfigValue('API_PREFIX')]);
         }
 
         return static::$_client;
     }
 
+    /**
+     * Get constant setting value.
+     * @param string $name
+     * @param mixed $defaultValue
+     * @return mixed
+     */
+    private static function _getRestConfigValue($name, $defaultValue = null)
+    {
+        $name = 'YADJET_TENANT_SDK_REST_' . strtoupper($name);
+
+        return defined($name) ? constant($name) : $defaultValue;
+    }
+
     private static function _parseParams($uri, $params = [])
     {
         $res = [];
-        $params['accessToken'] = '1111111111';
+        $params['accessToken'] = self::_getRestConfigValue('ACCESS_TOKEN');
         if (is_array($params)) {
             foreach ($params as $key => $value) {
                 $res[] = "$key=$value";
