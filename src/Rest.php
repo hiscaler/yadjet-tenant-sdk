@@ -18,11 +18,11 @@ class Rest
 {
 
     /**
-     * Format type
+     * Action type
      */
-    const FORMAT_ALL = 'all';
-    const FORMAT_LIST = 'list';
-    const FORMAT_ONE = 'one';
+    const ACTION_ALL = 'all';
+    const ACTION_LIST = 'list';
+    const ACTION_ONE = 'one';
 
     /**
      * @var Client
@@ -106,12 +106,12 @@ class Rest
      * @param string $format
      * @return array|boolean
      */
-    private static function _parseResponse($response, $format = static::FORMAT_LIST)
+    private static function _parseResponse($response, $format = static::ACTION_LIST)
     {
         switch ($response->getStatusCode()) {
             case 200:
                 $body = json_decode($response->getBody(), true);
-                return $format == static::FORMAT_LIST ? $body['data']['items'] : $body['data'];
+                return $format == static::ACTION_LIST ? $body['data']['items'] : $body['data'];
 
             case 400:
             case 500:
@@ -131,7 +131,7 @@ class Rest
     private static function _all($uri, $params = [])
     {
         $response = static::getInstance()->request('GET', static::_parseParams($uri, $params));
-        return self::_parseResponse($response, self::FORMAT_ALL);
+        return self::_parseResponse($response, self::ACTION_ALL);
     }
 
     /**
@@ -143,7 +143,7 @@ class Rest
     private static function _list($uri, $params)
     {
         $response = static::getInstance()->request('GET', static::_parseParams($uri . '/list', $params));
-        return self::_parseResponse($response, self::FORMAT_LIST);
+        return self::_parseResponse($response, self::ACTION_LIST);
     }
 
     /**
@@ -155,7 +155,7 @@ class Rest
     private static function _one($uri, $params)
     {
         $response = static::getInstance()->request('GET', static::_parseParams($uri, $params));
-        return self::_parseResponse($response, self::FORMAT_ONE);
+        return self::_parseResponse($response, self::ACTION_ONE);
     }
 
     /**
