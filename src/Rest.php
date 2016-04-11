@@ -12,6 +12,12 @@ use League\Flysystem\Adapter\Local;
 /**
  * Rest
  * 
+ * Const define
+ * defined('YADJET_TENANT_REST_ACCESS_TOKEN') or define('YADJET_TENANT_SDK_REST_ACCESS_TOKEN', '1234567890');
+ * defined('YADJET_TENANT_SDK_REST_LANGUAGE') or define('YADJET_TENANT_SDK_REST_LANGUAGE', 'zh-CN');
+ * defined('YADJET_TENANT_SDK_REST_API_URL_PREFIX') or define('YADJET_TENANT_SDK_REST_API_URL_PREFIX', 'http://api.example.com');
+ * defined('YADJET_TENANT_SDK_REST_CACHE_DIR') or define('YADJET_TENANT_SDK_REST_CACHE_DIR', __DIR__ . '/../tmp');
+ * 
  * @author hiscaler <hiscaler@gmail.com>
  */
 class Rest
@@ -62,11 +68,11 @@ class Rest
             $stack->push(
                 new CacheMiddleware(
                     new PrivateCacheStrategy(
-                        new FlysystemStorage(new Local(__DIR__ . '/tmp/'))
+                        new FlysystemStorage(new Local(static::_getRestConfigValue('CACHE_DIR')))
                     )
                 ), 'cache'
             );
-            static::$_client = new Client(['handler' => $stack, 'base_uri' => self::_getRestConfigValue('API_PREFIX')]);
+            static::$_client = new Client(['handler' => $stack, 'base_uri' => self::_getRestConfigValue('API_URL_PREFIX')]);
         }
 
         return static::$_client;
