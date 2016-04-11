@@ -103,15 +103,15 @@ class Rest
     /**
      * Parse api repsonse body
      * @param Client $response
-     * @param string $format
+     * @param string $action
      * @return array|boolean
      */
-    private static function _parseResponse($response, $format = static::ACTION_LIST)
+    private static function _parseResponse($response, $action = static::ACTION_LIST)
     {
         switch ($response->getStatusCode()) {
             case 200:
                 $body = json_decode($response->getBody(), true);
-                return $format == static::ACTION_LIST ? $body['data']['items'] : $body['data'];
+                return $action == static::ACTION_LIST ? $body['data']['items'] : $body['data'];
 
             case 400:
             case 500:
