@@ -188,4 +188,19 @@ class Rest
         return $batchResults;
     }
 
+    /**
+     * News
+     */
+    public static function newsUp($params)
+    {
+        $response = static::getInstance()->request('PUT', self::_parseParams(Urls::createRelativeResourceUrl(Urls::$urlNewsUp, $params)));
+        return self::_parseResponse($response, self::ACTION_ONE);
+    }
+
+    public static function newsDown($params)
+    {
+        $response = static::getInstance()->request('PUT', self::_parseParams(Urls::createRelativeResourceUrl(Urls::$urlNewsDown, $params)));
+        return self::_parseResponse($response, self::ACTION_ONE);
+    }
+
 }
