@@ -175,18 +175,7 @@ class Rest
         }
         $results = \GuzzleHttp\Promise\unwrap($promises);
         foreach ($results as $key => $result) {
-            switch ($result->getStatusCode()) {
-                case 400:
-                case 500:
-                    $body = [];
-                    break;
-
-                default:
-                    $body = json_decode($result->getBody(), true);
-                    $body = $body['data']['items'];
-            }
-
-            $batchResults[$key] = $body;
+            $batchResults[$key] = static::_parseResponse($result);
         }
 
         return $batchResults;
