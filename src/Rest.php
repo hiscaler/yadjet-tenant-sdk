@@ -191,6 +191,12 @@ class Rest
     /**
      * News
      */
+    public static function newsClicks($params)
+    {
+        $response = static::getInstance()->request('PUT', self::_parseParams(Urls::createRelativeResourceUrl(Urls::$urlNewsClicks, $params)));
+        return self::_parseResponse($response, self::ACTION_ONE);
+    }
+
     public static function newsUp($params)
     {
         $response = static::getInstance()->request('PUT', self::_parseParams(Urls::createRelativeResourceUrl(Urls::$urlNewsUp, $params)));
